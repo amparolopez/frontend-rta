@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { Container, Spinner, Alert } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import FileList from './components/FileList';
+import { fetchFiles } from './store/actions';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const App = () => {
+    const dispatch = useDispatch();
+    const { files, loading, error } = useSelector((state) => state.files);
+
+    useEffect(() => {
+        dispatch(fetchFiles());
+    }, [dispatch]);
+
+    return (
+        <Container>
+            {loading ? (
+                <Spinner animation="border" />
+            ) : error ? (
+                <Alert variant="danger">{error}</Alert>
+            ) : (
+                <FileList files={files} />
+            )}
+        </Container>
+    );
+};
 
 export default App;
